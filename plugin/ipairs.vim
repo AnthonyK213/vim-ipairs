@@ -51,20 +51,20 @@ let g:pairs_md_map = {
 "" Pair special quotes.
 let g:last_spec = '"''\\'
 let g:next_spec = '"'''
-let g:back_spec = '^\b'
+let g:back_spec = '\v^\b'
 let g:pairs_is_word = '\a-z_\u4e00-\u9fa5'
 augroup pairs_special
     autocmd!
     au BufEnter *.rs let g:last_spec = '"''\\&<'
     au BufLeave *.rs let g:last_spec = '"''\\'
-    au BufEnter *.vim let g:back_spec = '^\s*$'
-    au BufLeave *.vim let g:back_spec = '^\b'
+    au BufEnter *.vim let g:back_spec = '\v^\s*$'
+    au BufLeave *.vim let g:back_spec = '\v^\b'
 augroup end
 
 
 " Functions
 function! s:ipairs_reg(str)
-    return '[' . a:str . ']'
+    return '\v[' . a:str . ']'
 endfunction
 
 "" Get the character around the cursor.
@@ -80,16 +80,16 @@ endfunction
 
 "" Replace chars in a string according to a dictionary.
 function! s:ipairs_str_escape(str)
-    let str_lst = split(a:str, '.\zs')
-    let esc_dict = {
+    let l:str_lst = split(a:str, '.\zs')
+    let l:esc_dict = {
         \ "\"": "\\\""
       \ }
-    let i = 0
+    let l:i = 0
     for char in str_lst
         if has_key(esc_dict, char)
             let str_lst[i] = esc_dict[char]
         endif
-        let i = i + 1
+        let l:i += 1
     endfor
     return join(str_lst, '')
 endfunction
@@ -125,13 +125,13 @@ function! s:ipairs_close(pair_b)
 endfunction
 
 function! s:ipairs_quote(quote)
-    let last_char = s:ipairs_context.get('l')
-    let next_char = s:ipairs_context.get('n')
-    if next_char ==# a:quote &&
-       \ (last_char ==# a:quote || last_char =~ s:ipairs_reg(g:pairs_is_word))
+    let l:last_char = s:ipairs_context.get('l')
+    let l:next_char = s:ipairs_context.get('n')
+    if l:next_char ==# a:quote &&
+       \ (l:last_char ==# a:quote || l:last_char =~ s:ipairs_reg(g:pairs_is_word))
         return "\<C-g>U\<Right>"
-    elseif last_char =~ s:ipairs_reg(g:pairs_is_word . g:last_spec) ||
-         \ next_char =~ s:ipairs_reg(g:pairs_is_word . g:next_spec) ||
+    elseif l:last_char =~ s:ipairs_reg(g:pairs_is_word . g:last_spec) ||
+         \ l:next_char =~ s:ipairs_reg(g:pairs_is_word . g:next_spec) ||
          \ s:ipairs_context.get('b') =~ g:back_spec
         return a:quote
     else
@@ -141,27 +141,27 @@ endfunction
 
 function! s:ipairs_def_map(key, fn)
     if a:key ==? "<CR>" || a:key ==? "<BS>"
-        let key = ""
+        let l:key = ""
     else
-        let key = "\"" . s:ipairs_str_escape(a:key) . "\""
+        let l:key = "\"" . s:ipairs_str_escape(a:key) . "\""
     endif
-    exe 'inoremap <silent><expr> ' . a:key . ' <SID>ipairs_' . a:fn . '(' . key . ')'
+    exe 'inoremap <silent><expr> ' . a:key . ' <SID>ipairs_' . a:fn . '(' . l:key . ')'
 endfunction
 
 "" Surround.
 function! s:ipairs_surround(quote_a, quote_b)
-    let [ln_stt, co_stt] = getpos("'<")[1:2]
-    let [ln_end, co_end] = getpos("'>")[1:2]
-    call setpos('.', [0, ln_end, co_end])
+    let l:stt = [0] + getpos("'<")[1:2]
+    let l:end = [0] + getpos("'>")[1:2]
+    call setpos('.', l:end)
     exe "normal! a" . a:quote_b
-    call setpos('.', [0, ln_stt, co_stt])
+    call setpos('.', l:stt)
     exe "normal! i" . a:quote_a
 endfunction
 
 function! s:ipairs_sur_def_map(key)
-    let key = "\"" . s:ipairs_str_escape(a:key) . "\", "
-    let val = "\"" . s:ipairs_str_escape(g:pairs_usr_def[a:key]) . "\""
-    exe 'vnoremap <silent> <leader>e' . a:key . ' :<C-u>call <SID>ipairs_surround(' . key . val . ')<CR>'
+    let l:key = "\"" . s:ipairs_str_escape(a:key) . "\", "
+    let l:val = "\"" . s:ipairs_str_escape(g:pairs_usr_def[a:key]) . "\""
+    exe 'vnoremap <silent> <leader>e' . a:key . ' :<C-u>call <SID>ipairs_surround(' . l:key . l:val . ')<CR>'
 endfunction
 
 
