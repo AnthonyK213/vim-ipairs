@@ -52,7 +52,7 @@ let g:pairs_md_map = {
 let g:last_spec = '"''\\'
 let g:next_spec = '"'''
 let g:back_spec = '\v^\b'
-let g:pairs_is_word = '\a-z_\u4e00-\u9fa5'
+let g:pairs_is_word = 'a-z_\u4e00-\u9fa5'
 augroup pairs_special
   autocmd!
   au BufEnter *.rs let g:last_spec = '"''\\&<'
