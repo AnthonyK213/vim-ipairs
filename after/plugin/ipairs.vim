@@ -8,14 +8,7 @@
 "" Can be overwritten.
 """ User defined pairs.
 let g:pairs_usr_def = get(g:, 'pairs_usr_def', {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "<":">"})
-"let g:pairs_usr_def = {
-"      \ "("  : ")",
-"      \ "["  : "]",
-"      \ "{"  : "}",
-"      \ "'"  : "'",
-"      \ "\"" : "\"",
-"      \ "<"  : ">"
-"      \ }
+let g:pairs_map_ret = get(g:, 'pairs_map_cr', 1)
 
 "" For key maps.
 """ Common.
@@ -136,7 +129,9 @@ endfunction
 
 " Key maps
 "" <CR> could be remapped by other plugin.
-for key in ["(", "[", "{", "'", '"', "<CR>", "<BS>"]
+let s:pairs_map_list = ["(", "[", "{", "'", '"', "<BS>"]
+if g:pairs_map_ret | let s:pairs_map_list += ["<CR>"]
+for key in s:pairs_map_list
   call IpairsDefMap(key, key)
 endfor
 augroup pairs_filetype
