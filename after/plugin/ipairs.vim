@@ -130,7 +130,7 @@ endfunction
 " Key maps
 "" <CR> could be remapped by other plugin.
 let s:pairs_map_list = ["(", "[", "{", "'", '"', "<BS>"]
-if g:pairs_map_ret | let s:pairs_map_list += ["<CR>"]
+if g:pairs_map_ret | let s:pairs_map_list += ["<CR>"] | endif
 for key in s:pairs_map_list
   call IpairsDefMap(key, key)
 endfor
