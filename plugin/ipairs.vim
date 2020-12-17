@@ -96,7 +96,9 @@ endfunction
 
 "" Pairs
 function! s:ipairs_is_surrounded(pair_dict)
-  return index(items(a:pair_dict), [s:ipairs_context.get('l'), s:ipairs_context.get('n')]) >= 0
+  let l:last_char = s:ipairs_context.get('l')
+  return has_key(g:pairs_usr_def, l:last_char) &&
+        \ g:pairs_usr_def[l:last_char] == s:ipairs_context.get('n')
 endfunction
 
 function! s:ipairs_enter()
