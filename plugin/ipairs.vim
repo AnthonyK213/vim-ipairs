@@ -7,14 +7,14 @@
 " Global variables.
 "" Can be overwritten.
 """ User defined pairs.
-let g:pairs_usr_def = {
-      \ "("  : ")",
-      \ "["  : "]",
-      \ "{"  : "}",
-      \ "'"  : "'",
-      \ "\"" : "\"",
-      \ "<"  : ">"
-      \ }
+"let g:pairs_usr_def = {
+"      \ "("  : ")",
+"      \ "["  : "]",
+"      \ "{"  : "}",
+"      \ "'"  : "'",
+"      \ "\"" : "\"",
+"      \ "<"  : ">"
+"      \ }
 
 "" For key maps.
 """ Common.
