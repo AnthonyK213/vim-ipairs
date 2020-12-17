@@ -13,40 +13,24 @@ let g:pairs_usr_def = {
       \ "{"  : "}",
       \ "'"  : "'",
       \ "\"" : "\"",
-      \ "`"  : "`",
-      \ "*"  : "*",
-      \ "**" : "**",
-      \ "***": "***",
       \ "<"  : ">",
       \ "$"  : "$"
       \ }
-""" Surround. Elements should be able to be found in pairs_usr_def.
-let g:pairs_sur_list = [
-      \ "(", "[", "{",
-      \ "'", "\"",
-      \ "<", "$"]
 
 "" For key maps.
 """ Common.
 let g:pairs_common_map = {
-      \ "("   : "mates",
-      \ "["   : "mates",
-      \ "{"   : "mates",
-      \ ")"   : "close",
-      \ "]"   : "close",
-      \ "}"   : "close",
-      \ "'"   : "quote",
-      \ "\""  : "quote",
       \ "<CR>": "enter",
       \ "<BS>": "backs"
       \ }
-""" Markdown pairs.
-let g:pairs_md_map = {
-      \ "`"  : "p",
-      \ "*"  : "i",
-      \ "**" : "b",
-      \ "***": "m"
-      \ }
+
+for [key, val] in items(g:pairs_usr_def) 
+  if key ==# val
+    call extend(g:pairs_common_map, {key:"quote"})
+  else
+    call extend(g:pairs_common_map, {key:"mates", val:"close"})
+  endif
+endfor
 
 "" Pair special quotes.
 let g:last_spec = '"''\\'
@@ -101,13 +85,13 @@ function! s:ipairs_is_surrounded(pair_dict)
         \ g:pairs_usr_def[l:last_char] == s:ipairs_context.get('n')
 endfunction
 
-function! s:ipairs_enter()
+function! s:ipairs_enter(...)
   return s:ipairs_is_surrounded(g:pairs_usr_def) ?
         \ "\<CR>\<ESC>O" :
         \ "\<CR>"
 endfunction
 
-function! s:ipairs_backs()
+function! s:ipairs_backs(...)
   return s:ipairs_is_surrounded(g:pairs_usr_def) ?
         \ "\<C-g>U\<Right>\<BS>\<BS>" :
         \ "\<BS>"
@@ -130,9 +114,11 @@ function! s:ipairs_quote(quote)
   let l:last_char = s:ipairs_context.get('l')
   let l:next_char = s:ipairs_context.get('n')
   if l:next_char ==# a:quote &&
-        \ (l:last_char ==# a:quote || l:last_char =~ s:ipairs_reg(g:pairs_is_word))
+        \ (l:last_char ==# a:quote ||
+        \  l:last_char =~ s:ipairs_reg(g:pairs_is_word))
     return "\<C-g>U\<Right>"
-  elseif l:last_char =~ s:ipairs_reg(g:pairs_is_word . g:last_spec) ||
+  elseif  l:last_char ==# a:quote ||
+        \ l:last_char =~ s:ipairs_reg(g:pairs_is_word . g:last_spec) ||
         \ l:next_char =~ s:ipairs_reg(g:pairs_is_word . g:next_spec) ||
         \ s:ipairs_context.get('b') =~ g:back_spec
     return a:quote
@@ -141,51 +127,22 @@ function! s:ipairs_quote(quote)
   endif
 endfunction
 
-function! s:ipairs_def_map(key, fn)
-  if a:key ==? "<CR>" || a:key ==? "<BS>"
-    let l:key = ""
-  else
-    let l:key = "\"" . s:ipairs_str_escape(a:key) . "\""
-  endif
-  exe 'inoremap <silent><expr> ' . a:key . ' <SID>ipairs_' . a:fn . '(' . l:key . ')'
-endfunction
-
-"" Surround.
-function! s:ipairs_surround(quote_a, quote_b)
-  let l:stt = [0] + getpos("'<")[1:2]
-  let l:end = [0] + getpos("'>")[1:2]
-  call setpos('.', l:end)
-  exe "normal! a" . a:quote_b
-  call setpos('.', l:stt)
-  exe "normal! i" . a:quote_a
-endfunction
-
-function! s:ipairs_sur_def_map(key)
-  let l:key = "\"" . s:ipairs_str_escape(a:key) . "\", "
-  let l:val = "\"" . s:ipairs_str_escape(g:pairs_usr_def[a:key]) . "\""
-  exe 'vnoremap <silent> <leader>e' . a:key . ' :<C-u>call <SID>ipairs_surround(' . l:key . l:val . ')<CR>'
+function! IpairsDefMap(kbd, key)
+  let l:key = "\"" . s:ipairs_str_escape(a:key) . "\""
+  exe 'inoremap <silent><expr> ' . a:kbd . ' <SID>ipairs_' .
+        \ g:pairs_common_map[a:key] . '(' . l:key . ')'
 endfunction
 
 
 " Key maps
 "" <CR> could be remapped by other plugin.
-for [key, fn] in items(g:pairs_common_map) | call s:ipairs_def_map(key, fn) | endfor
+for key in ["(", "[", "{", "'", '"', "<CR>", "<BS>"]
+  call IpairsDefMap(key, key)
+endfor
 augroup pairs_filetype
   autocmd!
   au BufEnter *.el,*.lisp  exe "iunmap '"
-  au BufLeave *.el,*.lisp  call <SID>ipairs_def_map("'", "quote")
-  au BufEnter *.xml,*.html call <SID>ipairs_def_map("<", "mates") | call <SID>ipairs_def_map(">", "close")
+  au BufLeave *.el,*.lisp  call IpairsDefMap("'", "'")
+  au BufEnter *.xml,*.html call IpairsDefMap("<", "<") | call IpairsDefMap(">", ">")
   au BufLeave *.xml,*.html exe 'inoremap < <' | exe 'inoremap > >'
 augroup end
-
-"" Surround; <leader> e* -> e(ncompass)
-for item in g:pairs_sur_list | call s:ipairs_sur_def_map(item) | endfor
-
-"" Markdown pair & surround
-for [key, val] in items(g:pairs_md_map)
-  let head = 'noremap <silent> <M-' . val . '> '
-  let args = '"' . key . '", "' . g:pairs_usr_def[key] . '"'
-  exe 'i' . head . '<C-r>=<SID>ipairs_mates("' . key . '")<CR>'
-  exe 'v' . head . ':<C-u>call <SID>ipairs_surround(' . args . ')<CR>'
-endfor
-vnoremap <silent> <M-u> :<C-u>call <SID>ipairs_surround("<u>", "</u>")<CR>
