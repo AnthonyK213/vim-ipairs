@@ -124,7 +124,7 @@ endfunction
 function! IpairsDefMap(kbd, key)
   let l:key = "\"" . s:ipairs_str_escape(a:key) . "\""
   exe 'inoremap <buffer> <silent> ' . a:kbd . ' <C-r>=<SID>ipairs_' .
-        \ g:pairs_common_map[a:key] . '(' . l:key . ')'
+        \ g:pairs_common_map[a:key] . '(' . l:key . ')<CR>'
 endfunction
 
 
