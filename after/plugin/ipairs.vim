@@ -25,7 +25,7 @@ if !exists('g:pairs_map_ret')
 endif
 
 if !exists('g:pairs_map_bak')
-  let g:pairs_map_ret = 1
+  let g:pairs_map_bak = 1
 endif
 
 "" For key maps.
@@ -164,7 +164,7 @@ if g:pairs_map_ret == 1
   call IpairsDefMap("<CR>", "<CR>")
 endif
 
-if g:pairs_map_ret == 1
+if g:pairs_map_bak == 1
   call IpairsDefMap("<BS>", "<BS>")
 endif
 
