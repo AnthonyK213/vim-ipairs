@@ -8,13 +8,7 @@
 "" Can be overwritten.
 """ User defined pairs.
 if !exists('g:pairs_common')
-  let g:pairs_common = {
-        \ "(" : ")",
-        \ "[" : "]",
-        \ "{" : "}",
-        \ "'" : "'",
-        \ "\"": "\"",
-        \ "<" : ">"}
+  let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "<":">"}
 endif
 
 if exists('g:pairs_usr_extd')
