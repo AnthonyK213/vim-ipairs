@@ -7,9 +7,22 @@
 " Global variables.
 "" Can be overwritten.
 """ User defined pairs.
-let g:pairs_usr_def = get(g:, 'pairs_usr_def',
-      \ {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "<":">"})
-let g:pairs_map_ret = get(g:, 'pairs_map_ret', 1)
+let g:pairs_common = {
+      \ "(" : ")",
+      \ "[" : "]",
+      \ "{" : "}",
+      \ "'" : "'",
+      \ "\"": "\"",
+      \ "<" : ">"
+      \ }
+
+if exists('g:pairs_usr_extd')
+  call extend(g:pairs_common, g:pairs_usr_extd)
+endif
+
+if !exists('g:pairs_map_ret')
+  let g:pairs_map_ret = 1
+endif
 
 "" For key maps.
 """ Common.
@@ -18,7 +31,7 @@ let g:pairs_common_map = {
       \ "<BS>": "backs"
       \ }
 
-for [key, val] in items(g:pairs_usr_def) 
+for [key, val] in items(g:pairs_common) 
   if key ==# val && len(val) == 1
     call extend(g:pairs_common_map, {key:"quote"})
   else
@@ -75,18 +88,18 @@ endfunction
 "" Pairs
 function! s:ipairs_is_surrounded(pair_dict)
   let l:last_char = s:ipairs_context.get('l')
-  return has_key(g:pairs_usr_def, l:last_char) &&
-        \ g:pairs_usr_def[l:last_char] == s:ipairs_context.get('n')
+  return has_key(g:pairs_common, l:last_char) &&
+        \ g:pairs_common[l:last_char] == s:ipairs_context.get('n')
 endfunction
 
-function! s:ipairs_enter(...)
-  return s:ipairs_is_surrounded(g:pairs_usr_def) ?
+function! s:ipairs_enter()
+  return s:ipairs_is_surrounded(g:pairs_common) ?
         \ "\<CR>\<ESC>O" :
         \ "\<CR>"
 endfunction
 
-function! s:ipairs_backs(...)
-  return s:ipairs_is_surrounded(g:pairs_usr_def) ?
+function! s:ipairs_backs()
+  return s:ipairs_is_surrounded(g:pairs_common) ?
         \ "\<C-g>U\<Right>\<BS>\<BS>" :
         \ "\<BS>"
 endfunction
@@ -94,8 +107,8 @@ endfunction
 function! s:ipairs_mates(pair_a)
   return s:ipairs_context.get('n') =~ s:ipairs_reg(g:pairs_is_word) ?
         \ a:pair_a :
-        \ a:pair_a . g:pairs_usr_def[a:pair_a] .
-        \ repeat("\<C-g>U\<Left>", len(g:pairs_usr_def[a:pair_a]))
+        \ a:pair_a . g:pairs_common[a:pair_a] .
+        \ repeat("\<C-g>U\<Left>", len(g:pairs_common[a:pair_a]))
 endfunction
 
 function! s:ipairs_close(pair_b)
@@ -131,12 +144,23 @@ endfunction
 
 " Key maps
 "" <CR> could be remapped by other plugin.
-let s:pairs_map_list = ["(", "[", "{", ")", "]", "}", "'", '"', "<CR>", "<BS>"]
+let s:pairs_map_list = [
+      \ "(", "[", "{",
+      \ ")", "]", "}",
+      \ "'", '"',
+      \ ]
+
 for key in s:pairs_map_list
   if g:pairs_map_ret == 1 || key !=# "<CR>"
     call IpairsDefMap(key, key)
   endif
 endfor
+
+if g:pairs_map_ret == 1
+  call IpairsDefMap("<CR>", "<CR>")
+endif
+
+
 augroup pairs_filetype
   autocmd!
   au BufEnter *.el,*.lisp  exe "iunmap '"
