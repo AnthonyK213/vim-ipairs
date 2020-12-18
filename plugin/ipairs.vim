@@ -141,8 +141,8 @@ endfunction
 function! s:ipairs_def_map(kbd, key)
   let l:key = a:key =~ '\v\<.+\>' ?
         \ "" : "\"" . s:ipairs_str_escape(a:key) . "\""
-  exe 'inoremap <buffer> <silent> ' . a:kbd . ' <C-r>=<SID>ipairs_' .
-        \ g:pairs_common_map[a:key] . '(' . l:key . ')<CR>'
+  exe 'inoremap <silent><expr> ' . a:kbd . ' <SID>ipairs_' .
+        \ g:pairs_common_map[a:key] . '(' . l:key . ')'
 endfunction
 
 
@@ -154,18 +154,24 @@ let s:pairs_map_list = [
       \ "'", '"',
       \ ]
 
-for key in s:pairs_map_list
-  if g:pairs_map_ret == 1 || key !=# "<CR>"
-    call s:ipairs_def_map(key, key)
-  endif
-endfor
-
 if g:pairs_map_ret == 1
   call s:ipairs_def_map("<CR>", "<CR>")
 endif
 
 if g:pairs_map_bak == 1
   call s:ipairs_def_map("<BS>", "<BS>")
+endif
+
+for key in s:pairs_map_list
+  if g:pairs_map_ret == 1 || key !=# "<CR>"
+    call s:ipairs_def_map(key, key)
+  endif
+endfor
+
+if exists('g:pairs_usr_extd_map')
+  for [key, val] in items(g:pairs_usr_extd_map)
+    call s:ipairs_def_map(key, val)
+  endfor
 endif
 
 augroup pairs_filetype
