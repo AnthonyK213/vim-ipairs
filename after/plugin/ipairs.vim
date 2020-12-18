@@ -19,7 +19,7 @@ let g:pairs_common_map = {
       \ }
 
 for [key, val] in items(g:pairs_usr_def) 
-  if key ==# val
+  if key ==# val && len(val) == 1
     call extend(g:pairs_common_map, {key:"quote"})
   else
     call extend(g:pairs_common_map, {key:"mates", val:"close"})
@@ -123,14 +123,14 @@ endfunction
 
 function! IpairsDefMap(kbd, key)
   let l:key = "\"" . s:ipairs_str_escape(a:key) . "\""
-  exe 'inoremap <silent><expr> ' . a:kbd . ' <SID>ipairs_' .
+  exe 'inoremap <buffer> <silent> ' . a:kbd . ' <C-r>=<SID>ipairs_' .
         \ g:pairs_common_map[a:key] . '(' . l:key . ')'
 endfunction
 
 
 " Key maps
 "" <CR> could be remapped by other plugin.
-let s:pairs_map_list = ["(", "[", "{", "'", '"', "<BS>"]
+let s:pairs_map_list = ["(", "[", "{", ")", "]", "}", "'", '"', "<BS>"]
 if g:pairs_map_ret | let s:pairs_map_list += ["<CR>"] | endif
 for key in s:pairs_map_list
   call IpairsDefMap(key, key)
