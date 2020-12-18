@@ -122,13 +122,6 @@ function! s:ipairs_quote(quote)
   endif
 endfunction
 
-function! ipairs#def_map(kbd, key)
-  let l:key = a:key =~ '\v\<.+\>' ?
-        \ "" : "\"" . s:ipairs_str_escape(a:key) . "\""
-  exe 'inoremap <buffer> <silent> ' . a:kbd . ' <C-r>=<SID>ipairs_' .
-        \ g:pairs_common_map[a:key] . '(' . l:key . ')<CR>'
-endfunction
-
 
 " Key maps
 "" <CR> could be remapped by other plugin.
