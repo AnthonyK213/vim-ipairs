@@ -24,6 +24,10 @@ if !exists('g:pairs_map_ret')
   let g:pairs_map_ret = 1
 endif
 
+if !exists('g:pairs_map_bak')
+  let g:pairs_map_ret = 1
+endif
+
 "" For key maps.
 """ Common.
 let g:pairs_common_map = {
@@ -160,6 +164,9 @@ if g:pairs_map_ret == 1
   call IpairsDefMap("<CR>", "<CR>")
 endif
 
+if g:pairs_map_ret == 1
+  call IpairsDefMap("<BS>", "<BS>")
+endif
 
 augroup pairs_filetype
   autocmd!
