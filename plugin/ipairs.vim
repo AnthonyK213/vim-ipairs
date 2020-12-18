@@ -7,9 +7,7 @@
 " Global variables.
 "" Can be overwritten.
 """ User defined pairs.
-if !exists('g:pairs_common')
-  let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "<":">"}
-endif
+let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "<":">"}
 
 if exists('g:pairs_usr_extd')
   call extend(g:pairs_common, g:pairs_usr_extd)
@@ -150,11 +148,11 @@ let s:pairs_map_list = [
       \ "'", '"',
       \ ]
 
-if g:pairs_map_ret == 1
+if g:pairs_map_ret
   call s:ipairs_def_map("<CR>", "<CR>")
 endif
 
-if g:pairs_map_bak == 1
+if g:pairs_map_bak
   call s:ipairs_def_map("<BS>", "<BS>")
 endif
 
