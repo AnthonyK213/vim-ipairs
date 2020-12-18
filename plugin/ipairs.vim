@@ -139,7 +139,7 @@ function! s:ipairs_quote(quote)
 endfunction
 
 function! s:ipairs_def_map(kbd, key)
-  let l:key = a:key =~ '\v\<.+\>' ?
+  let l:key = a:key =~# '\v\<[A-Z].*\>' ?
         \ "" : "\"" . s:ipairs_str_escape(a:key) . "\""
   exe 'inoremap <silent><expr> ' . a:kbd . ' <SID>ipairs_' .
         \ g:pairs_common_map[a:key] . '(' . l:key . ')'
