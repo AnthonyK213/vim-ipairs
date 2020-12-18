@@ -16,20 +16,6 @@ if !exists('g:paris_common')
         \ "\"": "\"",
         \ "<" : ">"
         \ }
-  "let g:pairs_common = {
-  "      \ '(' : ')',
-  "      \ '[' : ']',
-  "      \ '{' : '}',
-  "      \ "'" : "'",
-  "      \ '"': '"',
-  "      \ '<' : '>',
-  "      \ '$'  : '$',
-  "      \ '`'  : '`',
-  "      \ '*'  : '*',
-  "      \ '**' : '**',
-  "      \ '***': '***',
-  "      \ '<u>': '</u>'
-  "      \ }
 endif
 
 "if exists('g:pairs_usr_extd')
@@ -42,6 +28,10 @@ endif
 
 if !exists('g:pairs_map_bak')
   let g:pairs_map_bak = 1
+endif
+
+if !exists('g:pairs_usr_extd_map')
+  let g:pairs_usr_extd_map = {}
 endif
 
 "" For key maps.
@@ -179,16 +169,12 @@ if g:pairs_map_bak == 1
 endif
 
 for key in s:pairs_map_list
-  if g:pairs_map_ret == 1 || key !=# "<CR>"
-    call s:ipairs_def_map(key, key)
-  endif
+  call s:ipairs_def_map(key, key)
 endfor
 
-if exists('g:pairs_usr_extd_map')
-  for [key, val] in items(g:pairs_usr_extd_map)
-    call s:ipairs_def_map(key, val)
-  endfor
-endif
+for [key, val] in items(g:pairs_usr_extd_map)
+  call s:ipairs_def_map(key, val)
+endfor
 
 augroup pairs_filetype
   autocmd!
