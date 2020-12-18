@@ -168,6 +168,8 @@ if g:pairs_map_bak == 1
   call IpairsDefMap("<BS>", "<BS>")
 endif
 
+call ipairs#def#map("<M-z>", "abc")
+
 augroup pairs_filetype
   autocmd!
   au BufEnter *.el,*.lisp  exe "iunmap '"
