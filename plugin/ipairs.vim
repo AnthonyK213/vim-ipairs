@@ -23,10 +23,6 @@ if !exists('g:pairs_map_bak')
   let g:pairs_map_bak = 1
 endif
 
-if !exists('g:pairs_usr_extd_map')
-  let g:pairs_usr_extd_map = {}
-endif
-
 "" For key maps.
 """ Common.
 let g:pairs_common_map = {"<CR>":"enter", "<BS>":"backs"}
@@ -166,9 +162,11 @@ for key in s:pairs_map_list
   call s:ipairs_def_map(key, key)
 endfor
 
-for [key, val] in items(g:pairs_usr_extd_map)
-  call s:ipairs_def_map(key, val)
-endfor
+if exists('g:pairs_usr_extd_map')
+  for [key, val] in items(g:pairs_usr_extd_map)
+    call s:ipairs_def_map(key, val)
+  endfor
+endif
 
 augroup pairs_filetype
   autocmd!
