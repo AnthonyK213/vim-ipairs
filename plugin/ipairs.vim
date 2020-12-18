@@ -38,7 +38,8 @@ for [key, val] in items(g:pairs_common)
     else
       call extend(g:pairs_common_map, {key:"mates"})
   else
-    call extend(g:pairs_common_map, {key:"mates", val:"close"})
+    call extend(g:pairs_common_map, {key:"mates"})
+    call extend(g:pairs_common_map, {val:"close"})
   endif
 endfor
 
