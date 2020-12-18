@@ -36,7 +36,7 @@ for [key, val] in items(g:pairs_common)
     call extend(g:pairs_common_map, {key:"quote"})
   else
     call extend(g:pairs_common_map, {key:"mates"})
-    call extend(g:pairs_common_map, {val:"mates"})
+    call extend(g:pairs_common_map, {val:"close"})
   endif
 endfor
 
