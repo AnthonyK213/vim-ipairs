@@ -8,19 +8,33 @@
 "" Can be overwritten.
 """ User defined pairs.
 if !exists('g:paris_common')
+  "let g:pairs_common = {
+  "      \ "(" : ")",
+  "      \ "[" : "]",
+  "      \ "{" : "}",
+  "      \ "'" : "'",
+  "      \ "\"": "\"",
+  "      \ "<" : ">"
+  "      \ }
   let g:pairs_common = {
-        \ "(" : ")",
-        \ "[" : "]",
-        \ "{" : "}",
+        \ '(' : ')',
+        \ '[' : ']',
+        \ '{' : '}',
         \ "'" : "'",
-        \ "\"": "\"",
-        \ "<" : ">"
+        \ '"': '"',
+        \ '<' : '>',
+        \ '$'  : '$',
+        \ '`'  : '`',
+        \ '*'  : '*',
+        \ '**' : '**',
+        \ '***': '***',
+        \ '<u>': '</u>'
         \ }
 endif
 
-if exists('g:pairs_usr_extd')
-  call extend(g:pairs_common, g:pairs_usr_extd)
-endif
+"if exists('g:pairs_usr_extd')
+"  call extend(g:pairs_common, g:pairs_usr_extd)
+"endif
 
 if !exists('g:pairs_map_ret')
   let g:pairs_map_ret = 1
