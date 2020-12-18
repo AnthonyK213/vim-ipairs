@@ -8,19 +8,12 @@
 "" Can be overwritten.
 """ User defined pairs.
 if !exists('g:paris_common')
-  let g:pairs_common = {
-        \ "(" : ")",
-        \ "[" : "]",
-        \ "{" : "}",
-        \ "'" : "'",
-        \ "\"": "\"",
-        \ "<" : ">"
-        \ }
+  let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "<":">"}
 endif
 
-"if exists('g:pairs_usr_extd')
-"  call extend(g:pairs_common, g:pairs_usr_extd)
-"endif
+if exists('g:pairs_usr_extd')
+  call extend(g:pairs_common, g:pairs_usr_extd)
+endif
 
 if !exists('g:pairs_map_ret')
   let g:pairs_map_ret = 1
@@ -36,10 +29,7 @@ endif
 
 "" For key maps.
 """ Common.
-let g:pairs_common_map = {
-      \ "<CR>": "enter",
-      \ "<BS>": "backs"
-      \ }
+let g:pairs_common_map = {"<CR>":"enter", "<BS>":"backs"}
 
 for [key, val] in items(g:pairs_common) 
   if key ==# val && len(val) == 1
