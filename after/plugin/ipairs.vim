@@ -130,10 +130,11 @@ endfunction
 
 " Key maps
 "" <CR> could be remapped by other plugin.
-let s:pairs_map_list = ["(", "[", "{", ")", "]", "}", "'", '"', "<BS>"]
-if g:pairs_map_ret | let s:pairs_map_list += ["<CR>"] | endif
+let s:pairs_map_list = ["(", "[", "{", ")", "]", "}", "'", '"', "<CR>", "<BS>"]
 for key in s:pairs_map_list
-  call IpairsDefMap(key, key)
+  if g:pairs_map_ret == 1 || key !=# "<CR>"
+    call IpairsDefMap(key, key)
+  endif
 endfor
 augroup pairs_filetype
   autocmd!
