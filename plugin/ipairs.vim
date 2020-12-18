@@ -7,14 +7,16 @@
 " Global variables.
 "" Can be overwritten.
 """ User defined pairs.
-let g:pairs_common = {
-      \ "(" : ")",
-      \ "[" : "]",
-      \ "{" : "}",
-      \ "'" : "'",
-      \ "\"": "\"",
-      \ "<" : ">"
-      \ }
+if !exists('g:paris_common')
+  let g:pairs_common = {
+        \ "(" : ")",
+        \ "[" : "]",
+        \ "{" : "}",
+        \ "'" : "'",
+        \ "\"": "\"",
+        \ "<" : ">"
+        \ }
+endif
 
 if exists('g:pairs_usr_extd')
   call extend(g:pairs_common, g:pairs_usr_extd)
