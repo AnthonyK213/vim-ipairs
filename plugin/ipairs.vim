@@ -73,22 +73,6 @@ function! s:ipairs_context.get(arg) abort
   return matchstr(getline('.'), self[a:arg][0] . col('.') . self[a:arg][1])
 endfunction
 
-"" Replace chars in a string according to a dictionary.
-function! s:ipairs_str_escape(str)
-  let l:str_lst = split(a:str, '.\zs')
-  let l:esc_dict = {
-        \ "\"": "\\\""
-        \ }
-  let l:i = 0
-  for char in str_lst
-    if has_key(esc_dict, char)
-      let str_lst[i] = esc_dict[char]
-    endif
-    let l:i += 1
-  endfor
-  return join(str_lst, '')
-endfunction
-
 "" Pairs
 function! s:ipairs_is_surrounded(pair_dict)
   let l:last_char = s:ipairs_context.get('l')
@@ -138,7 +122,7 @@ function! s:ipairs_quote(quote)
   endif
 endfunction
 
-function! IpairsDefMap(kbd, key)
+function! ipairs#def_map(kbd, key)
   let l:key = a:key =~ '\v\<.+\>' ?
         \ "" : "\"" . s:ipairs_str_escape(a:key) . "\""
   exe 'inoremap <buffer> <silent> ' . a:kbd . ' <C-r>=<SID>ipairs_' .
@@ -156,22 +140,22 @@ let s:pairs_map_list = [
 
 for key in s:pairs_map_list
   if g:pairs_map_ret == 1 || key !=# "<CR>"
-    call IpairsDefMap(key, key)
+    call ipairs#def_map(key, key)
   endif
 endfor
 
 if g:pairs_map_ret == 1
-  call IpairsDefMap("<CR>", "<CR>")
+  call ipairs#def_map("<CR>", "<CR>")
 endif
 
 if g:pairs_map_bak == 1
-  call IpairsDefMap("<BS>", "<BS>")
+  call ipairs#def_map("<BS>", "<BS>")
 endif
 
 augroup pairs_filetype
   autocmd!
   au BufEnter *.el,*.lisp  exe "iunmap '"
-  au BufLeave *.el,*.lisp  call IpairsDefMap("'", "'")
-  au BufEnter *.xml,*.html call IpairsDefMap("<", "<") | call IpairsDefMap(">", ">")
+  au BufLeave *.el,*.lisp  call ipairs#def_map("'", "'")
+  au BufEnter *.xml,*.html call ipairs#def_map("<", "<") | call ipairs#def_map(">", ">")
   au BufLeave *.xml,*.html exe 'inoremap < <' | exe 'inoremap > >'
 augroup end
