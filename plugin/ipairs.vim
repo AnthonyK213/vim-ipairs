@@ -27,23 +27,29 @@ endif
 
 "" Pair special quotes.
 
-let b:pairs_buffer_map = {"<CR>":"enter", "<BS>":"backs"}
+let b:pairs_buffer = copy(g:pairs_common)
+let g:pairs_is_word = 'a-z_\u4e00-\u9fa5'
 let b:last_spec = '"''\\'
 let b:next_spec = '"'''
 let b:back_spec = '\v^\b'
-let g:pairs_is_word = 'a-z_\u4e00-\u9fa5'
+let b:pairs_buffer_map = {"<CR>":"enter", "<BS>":"backs"}
+let b:pairs_map_list = [
+      \ "(", "[", "{",
+      \ ")", "]", "}",
+      \ "'", '"',
+      \ ]
 
 function! s:ipairs_def_buf()
   "if exists('b:pairs_buffer')
   "  return b:pairs_buffer
   "endif
-  let b:pairs_buffer = copy(g:pairs_common)
   if &filetype == 'vim'
     let b:back_spec = '\v^\s*$'
   elseif &filetype == 'rust'
     let b:last_spec = '"''\\&<'
   elseif &filetype == 'lisp'
-    unlet b:pairs_buffer["'"]
+    call filter(b:pairs_map_list, 'v:val !~ "''"')
+    call insert(b:pairs_map_list, '`')
     call extend(g:pairs_common, {'`':"'"})
   elseif &filetype == 'html'
     call extend(b:pairs_buffer, {'<':'>'})
@@ -161,11 +167,6 @@ endfunction
 
 " Key maps
 "" <CR> could be remapped by other plugin.
-let s:pairs_map_list = [
-      \ "(", "[", "{",
-      \ ")", "]", "}",
-      \ "'", '"',
-      \ ]
 function! s:ipairs_def_map_all()
   if g:pairs_map_ret
     call s:ipairs_def_map("<CR>", "<CR>")
@@ -175,7 +176,7 @@ function! s:ipairs_def_map_all()
     call s:ipairs_def_map("<BS>", "<BS>")
   endif
 
-  for key in s:pairs_map_list
+  for key in b:pairs_map_list
     call s:ipairs_def_map(key, key)
   endfor
 
