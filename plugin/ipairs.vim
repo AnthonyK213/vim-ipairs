@@ -65,7 +65,7 @@ endfunction
 
 augroup pairs_switch_buffer
   autocmd!
-  au BuffEnter * call <SID>ipairs_def_buf()
+  au BufEnter * call <SID>ipairs_def_buf()
 augroup end
 
 
