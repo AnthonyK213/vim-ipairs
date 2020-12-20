@@ -28,39 +28,39 @@ endif
 "" Pair special quotes.
 
 function! s:ipairs_def_buf()
-  "if exists('b:pairs_buffer')
-  "  return b:pairs_buffer
+  "if exists('g:pairs_buffer')
+  "  return g:pairs_buffer
   "endif
-  let b:pairs_buffer_map = {"<CR>":"enter", "<BS>":"backs"}
-  let b:last_spec = '"''\\'
-  let b:next_spec = '"'''
-  let b:back_spec = '\v^\b'
-  let b:pairs_is_word = 'a-z_\u4e00-\u9fa5'
-  let b:pairs_buffer = copy(g:pairs_common)
+  let g:pairs_buffer_map = {"<CR>":"enter", "<BS>":"backs"}
+  let g:last_spec = '"''\\'
+  let g:next_spec = '"'''
+  let g:back_spec = '\v^\b'
+  let g:pairs_is_word = 'a-z_\u4e00-\u9fa5'
+  let g:pairs_buffer = copy(g:pairs_common)
   if &filetype == 'vim'
-    let b:back_spec = '\v^\s*$'
+    let g:back_spec = '\v^\s*$'
   elseif &filetype == 'rust'
-    let b:last_spec = '"''\\&<'
+    let g:last_spec = '"''\\&<'
   elseif &filetype == 'lisp'
-    unlet b:pairs_buffer["'"]
-    call extend(b:pairs_common, {'`':"'"})
+    unlet g:pairs_buffer["'"]
+    call extend(g:pairs_common, {'`':"'"})
   elseif &filetype == 'html'
-    call extend(b:pairs_buffer, {'<':'>'})
+    call extend(g:pairs_buffer, {'<':'>'})
   endif
 
-  for [key, val] in items(b:pairs_buffer) 
+  for [key, val] in items(g:pairs_buffer) 
     if key ==# val
       if len(val) == 1
-        call extend(b:pairs_buffer_map, {key:"quote"})
+        call extend(g:pairs_buffer_map, {key:"quote"})
       else
-        call extend(b:pairs_buffer_map, {key:"mates"})
+        call extend(g:pairs_buffer_map, {key:"mates"})
       endif
     else
-      call extend(b:pairs_buffer_map, {key:"mates", val:"close"})
+      call extend(g:pairs_buffer_map, {key:"mates", val:"close"})
     endif
   endfor
 
-  "return b:pairs_buffer
+  "return g:pairs_buffer
 endfunction
 
 augroup pairs_switch_buffer
@@ -104,18 +104,18 @@ endfunction
 "" Pairs
 function! s:ipairs_is_surrounded(pair_dict)
   let l:last_char = s:ipairs_context.get('l')
-  return has_key(b:pairs_buffer, l:last_char) &&
-        \ b:pairs_buffer[l:last_char] == s:ipairs_context.get('n')
+  return has_key(g:pairs_buffer, l:last_char) &&
+        \ g:pairs_buffer[l:last_char] == s:ipairs_context.get('n')
 endfunction
 
 function! s:ipairs_enter()
-  return s:ipairs_is_surrounded(b:pairs_buffer) ?
+  return s:ipairs_is_surrounded(g:pairs_buffer) ?
         \ "\<CR>\<ESC>O" :
         \ "\<CR>"
 endfunction
 
 function! s:ipairs_backs()
-  return s:ipairs_is_surrounded(b:pairs_buffer) ?
+  return s:ipairs_is_surrounded(g:pairs_buffer) ?
         \ "\<C-g>U\<Right>\<BS>\<BS>" :
         \ "\<BS>"
 endfunction
@@ -123,8 +123,8 @@ endfunction
 function! s:ipairs_mates(pair_a)
   return s:ipairs_context.get('n') =~ s:ipairs_reg(g:pairs_is_word) ?
         \ a:pair_a :
-        \ a:pair_a . b:pairs_buffer[a:pair_a] .
-        \ repeat("\<C-g>U\<Left>", len(b:pairs_buffer[a:pair_a]))
+        \ a:pair_a . g:pairs_buffer[a:pair_a] .
+        \ repeat("\<C-g>U\<Left>", len(g:pairs_buffer[a:pair_a]))
 endfunction
 
 function! s:ipairs_close(pair_b)
@@ -154,7 +154,7 @@ function! s:ipairs_def_map(kbd, key)
   let l:key = a:key =~# '\v\<[A-Z].*\>' ?
         \ "" : "\"" . s:ipairs_str_escape(a:key) . "\""
   exe 'inoremap <buffer><silent><expr> ' . a:kbd . ' <SID>ipairs_' .
-        \ b:pairs_buffer_map[a:key] . '(' . l:key . ')'
+        \ g:pairs_buffer_map[a:key] . '(' . l:key . ')'
 endfunction
 
 
