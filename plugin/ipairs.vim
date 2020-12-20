@@ -37,6 +37,7 @@ function! s:ipairs_def_buf()
         \ ")", "]", "}",
         \ "'", '"',
         \ ]
+
   if &filetype == 'vim'
     let b:back_spec = '\v^\s*$'
   elseif &filetype == 'rust'
@@ -44,7 +45,7 @@ function! s:ipairs_def_buf()
   elseif &filetype == 'lisp'
     call filter(b:pairs_map_list, 'v:val !~ "''"')
     call insert(b:pairs_map_list, '`')
-    call extend(g:pairs_common, {'`':"'"})
+    call extend(b:pairs_buffer, {'`':"'"})
   elseif &filetype == 'html'
     call extend(b:pairs_buffer, {'<':'>'})
   endif
