@@ -31,7 +31,7 @@ let b:pairs_buffer_map = {"<CR>":"enter", "<BS>":"backs"}
 let b:last_spec = '"''\\'
 let b:next_spec = '"'''
 let b:back_spec = '\v^\b'
-let b:pairs_is_word = 'a-z_\u4e00-\u9fa5'
+let g:pairs_is_word = 'a-z_\u4e00-\u9fa5'
 
 function! s:ipairs_def_buf()
   "if exists('b:pairs_buffer')
@@ -66,7 +66,7 @@ endfunction
 
 augroup pairs_switch_buffer
   autocmd!
-  au BufEnter * call <SID>ipairs_def_buf()
+  au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
 augroup end
 
 
@@ -142,9 +142,9 @@ function! s:ipairs_quote(quote)
         \  l:last_char =~ s:ipairs_reg(g:pairs_is_word))
     return "\<C-g>U\<Right>"
   elseif  l:last_char ==# a:quote ||
-        \ l:last_char =~ s:ipairs_reg(g:pairs_is_word . g:last_spec) ||
-        \ l:next_char =~ s:ipairs_reg(g:pairs_is_word . g:next_spec) ||
-        \ s:ipairs_context.get('b') =~ g:back_spec
+        \ l:last_char =~ s:ipairs_reg(g:pairs_is_word . b:last_spec) ||
+        \ l:next_char =~ s:ipairs_reg(g:pairs_is_word . b:next_spec) ||
+        \ s:ipairs_context.get('b') =~ b:back_spec
     return a:quote
   else
     return a:quote . a:quote . "\<C-g>U\<Left>"
@@ -166,21 +166,22 @@ let s:pairs_map_list = [
       \ ")", "]", "}",
       \ "'", '"',
       \ ]
+function! s:ipairs_def_map_all()
+  if g:pairs_map_ret
+    call s:ipairs_def_map("<CR>", "<CR>")
+  endif
 
-if g:pairs_map_ret
-  call s:ipairs_def_map("<CR>", "<CR>")
-endif
+  if g:pairs_map_bak
+    call s:ipairs_def_map("<BS>", "<BS>")
+  endif
 
-if g:pairs_map_bak
-  call s:ipairs_def_map("<BS>", "<BS>")
-endif
-
-for key in s:pairs_map_list
-  call s:ipairs_def_map(key, key)
-endfor
-
-if exists('g:pairs_usr_extd_map')
-  for [key, val] in items(g:pairs_usr_extd_map)
-    call s:ipairs_def_map(key, val)
+  for key in s:pairs_map_list
+    call s:ipairs_def_map(key, key)
   endfor
-endif
+
+  if exists('g:pairs_usr_extd_map')
+    for [key, val] in items(g:pairs_usr_extd_map)
+      call s:ipairs_def_map(key, val)
+    endfor
+  endif
+endfunction
