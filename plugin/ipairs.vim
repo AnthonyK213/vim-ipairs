@@ -63,6 +63,11 @@ function! s:ipairs_def_buf()
   "return b:pairs_buffer
 endfunction
 
+augroup pairs_switch_buffer
+  autocmd!
+  au BuffEnter * call <SID>ipairs_def_buf()
+augroup end
+
 
 " Functions
 function! s:ipairs_reg(str)
@@ -146,7 +151,6 @@ function! s:ipairs_quote(quote)
 endfunction
 
 function! s:ipairs_def_map(kbd, key)
-  call s:ipairs_def_buf()
   let l:key = a:key =~# '\v\<[A-Z].*\>' ?
         \ "" : "\"" . s:ipairs_str_escape(a:key) . "\""
   exe 'inoremap <buffer><silent><expr> ' . a:kbd . ' <SID>ipairs_' .
