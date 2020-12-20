@@ -47,6 +47,7 @@ function! s:ipairs_def_buf()
     call insert(b:pairs_map_list, '`')
     call extend(b:pairs_buffer, {'`':"'"})
   elseif &filetype == 'html'
+    call extend(b:pairs_map_list, ['<', '>'])
     call extend(b:pairs_buffer, {'<':'>'})
   endif
 
