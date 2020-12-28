@@ -89,9 +89,7 @@ endfunction
 "" Replace chars in a string according to a dictionary.
 function! s:ipairs_str_escape(str)
   let l:str_lst = split(a:str, '.\zs')
-  let l:esc_dict = {
-        \ "\"": "\\\""
-        \ }
+  let l:esc_dict = {"\"": "\\\""}
   let l:i = 0
   for char in str_lst
     if has_key(esc_dict, char)
