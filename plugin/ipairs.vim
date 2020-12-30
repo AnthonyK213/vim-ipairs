@@ -119,7 +119,7 @@ function! s:ipairs_backs()
         \ "\<BS>"
 endfunction
 
-function! s:ipairs_mates(pair_a) abort
+function! s:ipairs_mates(pair_a)
   return s:ipairs_context.get('n') =~ s:ipairs_reg(g:pairs_is_word) ?
         \ a:pair_a :
         \ a:pair_a . b:pairs_buffer[a:pair_a] .
