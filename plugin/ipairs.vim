@@ -113,7 +113,7 @@ endfunction
 
 function! s:ipairs_enter()
   return s:ipairs_is_surrounded(b:pairs_buffer) ?
-        \ "\<CR>\<ESC>O" :
+        \ "\<CR>\<C-o>O" :
         \ "\<CR>"
 endfunction
 
