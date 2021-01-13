@@ -158,7 +158,7 @@ endfunction
 function! s:ipairs_def_map(kbd, key)
   let l:key = a:key =~# '\v\<[A-Z].*\>' ?
         \ "" : "\"" . s:ipairs_str_escape(a:key) . "\""
-  exe 'inoremap <buffer><silent><expr> ' . a:kbd . ' <SID>ipairs_' .
+  exe 'inoremap <buffer><silent><expr>' a:kbd '<SID>ipairs_' .
         \ b:pairs_buffer_map[a:key] . '(' . l:key . ')'
 endfunction
 
