@@ -21,7 +21,7 @@ if !exists('g:pairs_map_bak')
 endif
 
 if !exists('g:pairs_map_spc')
-  let g:pairs_map_bak = 1
+  let g:pairs_map_spc = 1
 endif
 
 let g:pairs_is_word = 'a-z_\u4e00-\u9fa5'
