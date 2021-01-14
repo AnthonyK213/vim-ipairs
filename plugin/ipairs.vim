@@ -29,8 +29,9 @@ function! s:ipairs_def_buf()
   let b:next_spec = '"'''
   let b:back_spec = '\v^\b'
   let b:pairs_buffer_map = {
-        \ "<CR>":"enter",
-        \ "<BS>":"backs"
+        \ "<CR>"  : "enter",
+        \ "<BS>"  : "backs",
+        \ "<M-BS>": "supbs"
         \ }
   let b:pairs_map_list = [
         \ "(", "[", "{",
@@ -72,6 +73,19 @@ augroup pairs_switch_buffer
   autocmd!
   au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
 augroup end
+
+let g:pairs_esc_reg = {
+      \ "(" : "\\(",
+      \ "[" : "\\[",
+      \ "{" : "\\{",
+      \ ")" : "\\)",
+      \ "]" : "\\]",
+      \ "}" : "\\}",
+      \ "*" : "\\*",
+      \ " " : "\\s",
+      \ "<" : "\\<",
+      \ ">" : "\\>"
+      \ }
 
 
 " Functions
@@ -123,6 +137,23 @@ function! s:ipairs_backs()
         \ "\<BS>"
 endfunction
 
+function! s:ipairs_supbs()
+  let l:back = s:ipairs_context.get('b')
+  let l:fore = s:ipairs_context.get('f')
+  let l:res = [0, 0, 0]
+  for [key, val] in items(b:pairs_buffer_map)
+    let l:key_esc = "\\v" . s:ipairs_str_escape(key, g:pairs_esc_reg) . '$'
+    let l:val_esc = "\\v^" . s:ipairs_str_escape(val, g:pairs_esc_reg)
+    if l:back =~ l:key_esc && l:fore =~ l:val_esc && 
+     \ len(key) + len(val) > l:res[1] + l:res[2]
+      let l:res = [1, len(key), len(val)]
+    endif
+  endfor
+  return l:res[0] == 1 ?
+        \ repeat("\<C-g>U\<Right>", l:res[2]) . repeat("\<BS>", l:res[1] + l:res[2]) :
+        \ "\<BS>"
+endfunction
+
 function! s:ipairs_mates(pair_a)
   return s:ipairs_context.get('n') =~ s:ipairs_reg(g:pairs_is_word) ?
         \ a:pair_a :
@@ -169,6 +200,7 @@ function! s:ipairs_def_map_all()
 
   if g:pairs_map_bak
     call s:ipairs_def_map("<BS>", "<BS>")
+    call s:ipairs_def_map("<M-BS>", "<M-BS>")
   endif
 
   for key in b:pairs_map_list
