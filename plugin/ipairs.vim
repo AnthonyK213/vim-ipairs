@@ -136,6 +136,11 @@ function! s:ipairs_enter()
 endfunction
 
 function! s:ipairs_backs()
+  let l:back = s:ipairs_context.get('b')
+  let l:fore = s:ipairs_context.get('f')
+  if l:back =~ '\v\{\s$' && l:fore =~ '\v^\s\}'
+    return "\<C-g>U\<Right>\<BS>\<BS>""
+  endif
   return s:ipairs_is_surrounded(b:pairs_buffer) ?
         \ "\<C-g>U\<Right>\<BS>\<BS>" :
         \ "\<BS>"
@@ -144,9 +149,6 @@ endfunction
 function! s:ipairs_supbs()
   let l:back = s:ipairs_context.get('b')
   let l:fore = s:ipairs_context.get('f')
-  if l:back =~ '\v\{\s$' && l:fore =~ '\v^\s\}'
-    return "\<C-g>U\<Right>\<BS>\<BS>""
-  endif
   let l:res = [0, 0, 0]
   for [key, val] in items(b:pairs_buffer)
     let l:key_esc = "\\v" . s:ipairs_str_escape(key, g:pairs_esc_reg) . '$'
