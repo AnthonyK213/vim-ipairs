@@ -20,6 +20,10 @@ if !exists('g:pairs_map_bak')
   let g:pairs_map_bak = 1
 endif
 
+if !exists('g:pairs_map_spc')
+  let g:pairs_map_bak = 1
+endif
+
 let g:pairs_is_word = 'a-z_\u4e00-\u9fa5'
 
 "" Refresh buffer variables.
@@ -29,9 +33,10 @@ function! s:ipairs_def_buf()
   let b:next_spec = '"'''
   let b:back_spec = '\v^\b'
   let b:pairs_buffer_map = {
-        \ "<CR>"  : "enter",
-        \ "<BS>"  : "backs",
-        \ "<M-BS>": "supbs"
+        \ "<CR>"   : "enter",
+        \ "<BS>"   : "backs",
+        \ "<M-BS>" : "supbs",
+        \ "<SPACE>": "space"
         \ }
   let b:pairs_map_list = [
         \ "(", "[", "{",
@@ -139,6 +144,9 @@ endfunction
 function! s:ipairs_supbs()
   let l:back = s:ipairs_context.get('b')
   let l:fore = s:ipairs_context.get('f')
+  if l:back =~ "\v\{\s$" && l:fore =~ "\v^\s\}"
+    return "\<C-g>U\<Right>\<BS>\<BS>""
+  endif
   let l:res = [0, 0, 0]
   for [key, val] in items(b:pairs_buffer)
     let l:key_esc = "\\v" . s:ipairs_str_escape(key, g:pairs_esc_reg) . '$'
@@ -151,6 +159,12 @@ function! s:ipairs_supbs()
   return l:res[0] == 1 ?
         \ repeat("\<C-g>U\<Right>", l:res[2]) . repeat("\<BS>", l:res[1] + l:res[2]) :
         \ "\<BS>"
+endfunction
+
+function! s:ipairs_space()
+  return s:ipairs_is_surrounded({"{":"}"}) ?
+        \ "\<SPACE>\<SPACE>\<C-g>U\<Left>" :
+        \ "\<SPACE>"
 endfunction
 
 function! s:ipairs_mates(pair_a)
@@ -200,6 +214,10 @@ function! s:ipairs_def_map_all()
   if g:pairs_map_bak
     call s:ipairs_def_map("<BS>", "<BS>")
     call s:ipairs_def_map("<M-BS>", "<M-BS>")
+  endif
+
+  if g:pairs_map_spc
+    call s:ipairs_def_map("<SPACE>", "<SPACE>")
   endif
 
   for key in b:pairs_map_list
