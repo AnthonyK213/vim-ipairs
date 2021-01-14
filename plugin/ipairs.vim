@@ -144,7 +144,7 @@ endfunction
 function! s:ipairs_supbs()
   let l:back = s:ipairs_context.get('b')
   let l:fore = s:ipairs_context.get('f')
-  if l:back =~ "\v\{\s$" && l:fore =~ "\v^\s\}"
+  if l:back =~ '\v\{\s$' && l:fore =~ '\v^\s\}'
     return "\<C-g>U\<Right>\<BS>\<BS>""
   endif
   let l:res = [0, 0, 0]
