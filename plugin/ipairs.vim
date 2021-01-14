@@ -140,7 +140,7 @@ function! s:ipairs_supbs()
   let l:back = s:ipairs_context.get('b')
   let l:fore = s:ipairs_context.get('f')
   let l:res = [0, 0, 0]
-  for [key, val] in items(b:pairs_buffer_map)
+  for [key, val] in items(b:pairs_buffer)
     let l:key_esc = "\\v" . s:ipairs_str_escape(key, g:pairs_esc_reg) . '$'
     let l:val_esc = "\\v^" . s:ipairs_str_escape(val, g:pairs_esc_reg)
     if l:back =~ l:key_esc && l:fore =~ l:val_esc && 
