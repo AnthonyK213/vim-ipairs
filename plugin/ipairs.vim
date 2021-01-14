@@ -34,7 +34,7 @@ function! s:ipairs_def_buf()
   let b:back_spec = '\v^\b'
   let b:pairs_buffer_map = {
         \ "<CR>"   : "enter",
-        \ "<BS>"   : "backs",
+        \ "<BS>"   : "supbs",
         \ "<M-BS>" : "supbs",
         \ "<SPACE>": "space"
         \ }
