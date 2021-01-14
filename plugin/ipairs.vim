@@ -159,7 +159,8 @@ function! s:ipairs_supbs()
     endif
   endfor
   return l:res[0] == 1 ?
-        \ repeat("\<C-g>U\<Right>", l:res[2]) . repeat("\<BS>", l:res[1] + l:res[2]) :
+        \ repeat("\<C-g>U\<Right>", l:res[2]) .
+        \ repeat("\<BS>", l:res[1] + l:res[2]) :
         \ "\<BS>"
 endfunction
 
