@@ -125,7 +125,7 @@ endfunction
 "" Pairs
 function! s:ipairs_is_surrounded(pair_dict)
   let l:last_char = s:ipairs_context.get('l')
-  return has_key(b:pairs_buffer, l:last_char) &&
+  return has_key(a:pair_dict, l:last_char) &&
         \ b:pairs_buffer[l:last_char] == s:ipairs_context.get('n')
 endfunction
 
