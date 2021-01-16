@@ -213,10 +213,6 @@ function! s:ipairs_def_map_all()
 endfunction
 
 
-" FIXME: What if just change the file type in the same buffer?
-" The problem is that the added key maps should be removed if this 
-" kind of change happened...
-" Or just add a determination to the functions which tests if the key is in the list.
 augroup pairs_switch_buffer
   autocmd!
   au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
