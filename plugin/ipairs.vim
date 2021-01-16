@@ -106,8 +106,7 @@ endfunction
 
 function! s:ipairs_enter()
   return s:ipairs_is_surrounded(b:pairs_buffer) ?
-        \ "\<CR>\<C-\>\<C-o>O" :
-        \ "\<CR>"
+        \ "\<CR>\<C-o>O" : "\<CR>"
 endfunction
 
 function! s:ipairs_backs()
@@ -117,8 +116,7 @@ function! s:ipairs_backs()
     return "\<C-g>U\<Right>\<BS>\<BS>"
   endif
   return s:ipairs_is_surrounded(b:pairs_buffer) ?
-        \ "\<C-g>U\<Right>\<BS>\<BS>" :
-        \ "\<BS>"
+        \ "\<C-g>U\<Right>\<BS>\<BS>" : "\<BS>"
 endfunction
 
 function! s:ipairs_supbs()
@@ -140,8 +138,7 @@ endfunction
 
 function! s:ipairs_space()
   return s:ipairs_is_surrounded({"{":"}"}) ?
-        \ "\<SPACE>\<SPACE>\<C-g>U\<Left>" :
-        \ "\<SPACE>"
+        \ "\<SPACE>\<SPACE>\<C-g>U\<Left>" : "\<SPACE>"
 endfunction
 
 function! s:ipairs_mates(pair_a)
@@ -153,8 +150,7 @@ endfunction
 
 function! s:ipairs_close(pair_b)
   return s:ipairs_context.get('n') ==# a:pair_b ?
-        \ "\<C-g>U\<Right>" :
-        \ a:pair_b
+        \ "\<C-g>U\<Right>" : a:pair_b
 endfunction
 
 function! s:ipairs_quote(quote)
