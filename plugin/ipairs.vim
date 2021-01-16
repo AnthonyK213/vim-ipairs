@@ -57,12 +57,11 @@ function! s:ipairs_clr_map()
   end
 endfunction
 
-let g:testtest = 1
 function! s:ipairs_def_var()
   if exists('b:pairs_map_list')
     return
   end
-  let g:testtest += 1
+
   let b:pairs_buffer = copy(g:pairs_common)
   let b:last_spec = '"''\\'
   let b:next_spec = '"'''
