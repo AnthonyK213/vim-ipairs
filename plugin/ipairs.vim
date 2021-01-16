@@ -57,7 +57,7 @@ function! s:ipairs_clr_map()
   end
 endfunction
 
-function! s:ipairs_def_buf()
+function! s:ipairs_def_var()
   if exists('b:pairs_map_list')
     return
   end
@@ -187,7 +187,7 @@ function! s:ipairs_def_map(kbd, key)
         \ b:pairs_buffer_map[a:key] . '(' . l:key . ')'
 endfunction
 
-function! s:ipairs_def_map_all()
+function! s:ipairs_def_all()
   if g:pairs_map_ret
     call s:ipairs_def_map("<CR>", "<CR>")
   endif
@@ -215,6 +215,6 @@ endfunction
 
 augroup pairs_switch_buffer
   autocmd!
-  au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
-  au FileType * call <SID>ipairs_clr_map() | call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
+  au BufEnter * call <SID>ipairs_def_var() | call <SID>ipairs_def_all()
+  au FileType * call <SID>ipairs_clr_map() | call <SID>ipairs_def_var() | call <SID>ipairs_def_all()
 augroup end
