@@ -104,7 +104,7 @@ function! s:ipairs_backs()
   let l:back = s:ipairs_context.get('b')
   let l:fore = s:ipairs_context.get('f')
   if l:back =~ '\v\{\s$' && l:fore =~ '\v^\s\}'
-    return "\<C-g>U\<Right>\<BS>\<BS>"
+    return "\<C-g>U\<Left>\<C-\>\<C-o>2x"
   endif
   return s:ipairs_is_surrounded(b:pairs_buffer) ?
         \ "\<C-g>U\<Right>\<BS>\<BS>" : "\<BS>"
