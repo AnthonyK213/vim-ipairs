@@ -27,6 +27,23 @@ endif
 let g:pairs_is_word = 'a-z_\u4e00-\u9fa5'
 let g:pairs_esc_reg = ' ()[]{}<>.*+\'
 
+
+" Functions
+function! s:ipairs_reg(str)
+  return '\v[' . a:str . ']'
+endfunction
+
+"" Get the character around the cursor.
+let s:ipairs_context = {
+      \ 'l' : ['.\%',   'c'],
+      \ 'n' : ['\%',   'c.'],
+      \ 'b' : ['^.*\%', 'c'],
+      \ 'f' : ['\%', 'c.*$']
+      \ }
+function! s:ipairs_context.get(arg) abort
+  return matchstr(getline('.'), self[a:arg][0] . col('.') . self[a:arg][1])
+endfunction
+
 "" Refresh buffer variables.
 function! s:ipairs_def_buf()
   let b:pairs_buffer = copy(g:pairs_common)
@@ -69,32 +86,6 @@ function! s:ipairs_def_buf()
       call extend(b:pairs_buffer_map, {key:"mates", val:"close"})
     endif
   endfor
-endfunction
-
-" FIXME: What if just change the file type in the same buffer?
-" The problem is that the added key maps should be removed if this 
-" kind of change happened...
-" Or just add a determination to the functions which tests if the key is in the list.
-augroup pairs_switch_buffer
-  autocmd!
-  au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
-augroup end
-
-
-" Functions
-function! s:ipairs_reg(str)
-  return '\v[' . a:str . ']'
-endfunction
-
-"" Get the character around the cursor.
-let s:ipairs_context = {
-      \ 'l' : ['.\%',   'c'],
-      \ 'n' : ['\%',   'c.'],
-      \ 'b' : ['^.*\%', 'c'],
-      \ 'f' : ['\%', 'c.*$']
-      \ }
-function! s:ipairs_context.get(arg) abort
-  return matchstr(getline('.'), self[a:arg][0] . col('.') . self[a:arg][1])
 endfunction
 
 "" Pairs
@@ -204,3 +195,13 @@ function! s:ipairs_def_map_all()
     endfor
   endif
 endfunction
+
+
+" FIXME: What if just change the file type in the same buffer?
+" The problem is that the added key maps should be removed if this 
+" kind of change happened...
+" Or just add a determination to the functions which tests if the key is in the list.
+augroup pairs_switch_buffer
+  autocmd!
+  au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
+augroup end
