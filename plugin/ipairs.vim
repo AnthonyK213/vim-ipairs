@@ -6,7 +6,7 @@
 
 " Global variables.
 "" User defined pairs.
-let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "( ":" )"}
+let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\""}
 
 if exists('g:pairs_usr_extd')
   call extend(g:pairs_common, g:pairs_usr_extd)
@@ -114,7 +114,7 @@ function! s:ipairs_backs()
   let l:back = s:ipairs_context.get('b')
   let l:fore = s:ipairs_context.get('f')
   if l:back =~ '\v\{\s$' && l:fore =~ '\v^\s\}'
-    return "\<C-o>x\<BS>"
+    return "\<C-g>U\<Right>\<BS>\<BS>"
   endif
   return s:ipairs_is_surrounded(b:pairs_buffer) ?
         \ "\<C-g>U\<Right>\<BS>\<BS>" :
