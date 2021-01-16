@@ -79,18 +79,7 @@ augroup pairs_switch_buffer
   au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
 augroup end
 
-let g:pairs_esc_reg = {
-      \ "(" : "\\(",
-      \ "[" : "\\[",
-      \ "{" : "\\{",
-      \ ")" : "\\)",
-      \ "]" : "\\]",
-      \ "}" : "\\}",
-      \ "*" : "\\*",
-      \ " " : "\\s",
-      \ "<" : "\\<",
-      \ ">" : "\\>"
-      \ }
+let g:pairs_esc_reg = '()[]{}* <>'
 
 
 " Functions
@@ -107,19 +96,6 @@ let s:ipairs_context = {
       \ }
 function! s:ipairs_context.get(arg) abort
   return matchstr(getline('.'), self[a:arg][0] . col('.') . self[a:arg][1])
-endfunction
-
-"" Replace chars in a string according to a dictionary.
-function! s:ipairs_str_escape(str, esc_dict)
-  let l:str_lst = split(a:str, '.\zs')
-  let l:i = 0
-  for char in str_lst
-    if has_key(a:esc_dict, char)
-      let str_lst[i] = a:esc_dict[char]
-    endif
-    let l:i += 1
-  endfor
-  return join(str_lst, '')
 endfunction
 
 "" Pairs
@@ -151,8 +127,8 @@ function! s:ipairs_supbs()
   let l:fore = s:ipairs_context.get('f')
   let l:res = [0, 0, 0]
   for [key, val] in items(b:pairs_buffer)
-    let l:key_esc = "\\v" . s:ipairs_str_escape(key, g:pairs_esc_reg) . '$'
-    let l:val_esc = "\\v^" . s:ipairs_str_escape(val, g:pairs_esc_reg)
+    let l:key_esc = "\\v" . escape(key, g:pairs_esc_reg) . '$'
+    let l:val_esc = "\\v^" . escape(val, g:pairs_esc_reg)
     if l:back =~ l:key_esc && l:fore =~ l:val_esc && 
      \ len(key) + len(val) > l:res[1] + l:res[2]
       let l:res = [1, len(key), len(val)]
@@ -204,7 +180,7 @@ endfunction
 """ <CR> could be remapped by other plugin.
 function! s:ipairs_def_map(kbd, key)
   let l:key = a:key =~# '\v\<[A-Z].*\>' ?
-        \ "" : "\"" . s:ipairs_str_escape(a:key, {"\"": "\\\""}) . "\""
+        \ "" : "\"" . escape(a:key, '"') . "\""
   exe 'inoremap <buffer><silent><expr>' a:kbd '<SID>ipairs_' .
         \ b:pairs_buffer_map[a:key] . '(' . l:key . ')'
 endfunction
