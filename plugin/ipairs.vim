@@ -220,5 +220,6 @@ endfunction
 augroup pairs_switch_buffer
   autocmd!
   au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
-  au BufWritePost,FileType,FileChangedShellPost * call <SID>ipairs_clr_map() | call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
+  au BufWritePost,FileType,FileChangedShellPost * call <SID>ipairs_clr_map() | call <SID>ipairs_def_buf()
+  " | call <SID>ipairs_def_map_all()
 augroup end
