@@ -25,6 +25,7 @@ if !exists('g:pairs_map_spc')
 endif
 
 let g:pairs_is_word = 'a-z_\u4e00-\u9fa5'
+let g:pairs_esc_reg = ' ()[]{}*<>'
 
 "" Refresh buffer variables.
 function! s:ipairs_def_buf()
@@ -78,8 +79,6 @@ augroup pairs_switch_buffer
   autocmd!
   au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
 augroup end
-
-let g:pairs_esc_reg = '()[]{}* <>'
 
 
 " Functions
