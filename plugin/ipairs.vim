@@ -45,7 +45,23 @@ function! s:ipairs_context.get(arg) abort
 endfunction
 
 "" Refresh buffer variables.
+"" b:pairs_buffer  :   dict, [pair_a, pair_b].
+"" b:pairs_buffer_map: dict, [key, func]
+"" b:pairs_map_list:   list, single character key.
+function! s:ipairs_clr_map()
+  if exists('b:pairs_map_list')
+    for key in b:pairs_map_list
+      exe 'iunmap' key
+    endfor
+  end
+  let g:pairs_test_clr = 1
+endfunction
+
 function! s:ipairs_def_buf()
+  if exists('b:pairs_map_list')
+    return
+  end
+
   let b:pairs_buffer = copy(g:pairs_common)
   let b:last_spec = '"''\\'
   let b:next_spec = '"'''
@@ -167,7 +183,7 @@ endfunction
 function! s:ipairs_def_map(kbd, key)
   let l:key = a:key =~# '\v\<[A-Z].*\>' ?
         \ "" : '"' . escape(a:key, '"') . '"'
-  exe 'inoremap <buffer><silent><expr>' a:kbd '<SID>ipairs_' .
+  exe 'ino <buffer><silent><expr>' a:kbd '<SID>ipairs_' .
         \ b:pairs_buffer_map[a:key] . '(' . l:key . ')'
 endfunction
 
@@ -204,4 +220,5 @@ endfunction
 augroup pairs_switch_buffer
   autocmd!
   au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
+  au BufWritePost,FileType,FileChangedShellPost * call <SID>ipairs_clr_map() | call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
 augroup end
