@@ -51,7 +51,7 @@ endfunction
 function! s:ipairs_clr_map()
   if exists('b:pairs_map_list')
     for key in b:pairs_map_list
-      exe 'iunmap' key
+      exe 'ino <buffer>' key key
     endfor
   end
   let g:pairs_test_clr = 1
