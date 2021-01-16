@@ -53,13 +53,12 @@ function! s:ipairs_clr_map()
     for key in b:pairs_map_list
       exe 'ino <buffer>' key key
     endfor
+    unlet b:pairs_map_list
   end
-  let g:pairs_test_clr = 1
-  unlet b:pairs_map_list
 endfunction
 
 function! s:ipairs_def_buf()
-  if exists('b:pairs_map_list')
+  if exists('b:pairs_buffer')
     return
   end
 
