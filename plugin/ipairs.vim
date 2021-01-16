@@ -6,7 +6,7 @@
 
 " Global variables.
 "" User defined pairs.
-let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "{ ":" }"}
+let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "( ":" )"}
 
 if exists('g:pairs_usr_extd')
   call extend(g:pairs_common, g:pairs_usr_extd)
