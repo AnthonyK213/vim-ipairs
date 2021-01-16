@@ -58,7 +58,7 @@ function! s:ipairs_clr_map()
 endfunction
 
 function! s:ipairs_def_buf()
-  if exists('b:pairs_buffer')
+  if exists('b:pairs_map_list')
     return
   end
 
