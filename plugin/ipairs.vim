@@ -55,6 +55,7 @@ function! s:ipairs_clr_map()
     endfor
     unlet b:pairs_map_list
   end
+  let g:testtest = 1
 endfunction
 
 function! s:ipairs_def_var()
