@@ -115,8 +115,8 @@ function! s:ipairs_supbs()
   let l:fore = s:ipairs_context.get('f')
   let l:res = [0, 0, 0]
   for [key, val] in items(b:pairs_buffer)
-    let l:key_esc = "\\v" . escape(key, g:pairs_esc_reg) . '$'
-    let l:val_esc = "\\v^" . escape(val, g:pairs_esc_reg)
+    let l:key_esc = '\v' . escape(key, g:pairs_esc_reg) . '$'
+    let l:val_esc = '\v^' . escape(val, g:pairs_esc_reg)
     if l:back =~ l:key_esc && l:fore =~ l:val_esc && 
      \ len(key) + len(val) > l:res[1] + l:res[2]
       let l:res = [1, len(key), len(val)]
