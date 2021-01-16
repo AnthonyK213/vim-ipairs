@@ -107,7 +107,7 @@ endfunction
 
 function! s:ipairs_enter()
   return s:ipairs_is_surrounded(b:pairs_buffer) ?
-        \ "\<CR>\<C-o>O" :
+        \ "\<CR>\<C-\>\<C-o>O" :
         \ "\<CR>"
 endfunction
 
@@ -135,9 +135,8 @@ function! s:ipairs_supbs()
     endif
   endfor
   return l:res[0] == 1 ?
-        \ repeat("\<C-g>U\<Right>", l:res[2]) .
-        \ repeat("\<BS>", l:res[1] + l:res[2]) :
-        \ "\<BS>"
+        \ "\<C-\>\<C-o>" . l:res[2] . "x" .
+        \ repeat("\<BS>", l:res[1]) : "\<BS>"
 endfunction
 
 function! s:ipairs_space()
