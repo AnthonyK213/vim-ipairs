@@ -55,6 +55,7 @@ function! s:ipairs_clr_map()
     endfor
   end
   let g:pairs_test_clr = 1
+  unlet b:pairs_map_list
 endfunction
 
 function! s:ipairs_def_buf()
@@ -220,6 +221,5 @@ endfunction
 augroup pairs_switch_buffer
   autocmd!
   au BufEnter * call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
-  au BufWritePost,FileType,FileChangedShellPost * call <SID>ipairs_clr_map() | call <SID>ipairs_def_buf()
-  " | call <SID>ipairs_def_map_all()
+  au BufWritePost,FileType,FileChangedShellPost * call <SID>ipairs_clr_map() | call <SID>ipairs_def_buf() | call <SID>ipairs_def_map_all()
 augroup end
