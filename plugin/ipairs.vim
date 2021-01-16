@@ -131,7 +131,7 @@ function! s:ipairs_supbs()
       let l:res = [1, len(key), len(val)]
     endif
   endfor
-  return l:res[0] == 1 ?
+  return l:res[0] ?
         \ repeat("\<C-g>U\<Left>", l:res[1]) .
         \ "\<C-\>\<C-o>" . (l:res[1] + l:res[2]) . "x" :
         \ "\<BS>"
