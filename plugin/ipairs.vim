@@ -6,7 +6,7 @@
 
 " Global variables.
 "" User defined pairs.
-let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\""}
+let g:pairs_common = {"(":")", "[":"]", "{":"}", "'":"'", "\"":"\"", "{ ":" }"}
 
 if exists('g:pairs_usr_extd')
   call extend(g:pairs_common, g:pairs_usr_extd)
@@ -180,7 +180,7 @@ endfunction
 """ <CR> could be remapped by other plugin.
 function! s:ipairs_def_map(kbd, key)
   let l:key = a:key =~# '\v\<[A-Z].*\>' ?
-        \ "" : "\"" . escape(a:key, '"') . "\""
+        \ "" : '"' . escape(a:key, '"') . '"'
   exe 'inoremap <buffer><silent><expr>' a:kbd '<SID>ipairs_' .
         \ b:pairs_buffer_map[a:key] . '(' . l:key . ')'
 endfunction
