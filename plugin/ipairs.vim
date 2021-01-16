@@ -132,8 +132,9 @@ function! s:ipairs_supbs()
     endif
   endfor
   return l:res[0] == 1 ?
-        \ "\<C-\>\<C-o>" . l:res[2] . "x" .
-        \ repeat("\<BS>", l:res[1]) : "\<BS>"
+        \ repeat("\<C-g>U<Left>", l:res[1]) .
+        \ "\<C-\>\<C-o>" . (l:res[1] + l:res[2]) . "x" :
+        \ "\<BS>"
 endfunction
 
 function! s:ipairs_space()
