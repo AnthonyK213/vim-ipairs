@@ -58,10 +58,6 @@ function! s:ipairs_clr_map()
 endfunction
 
 function! s:ipairs_def_var()
-  if exists('b:pairs_map_list')
-    return
-  end
-
   let b:pairs_buffer = copy(g:pairs_common)
   let b:last_spec = '"''\\'
   let b:next_spec = '"'''
@@ -188,6 +184,12 @@ function! s:ipairs_def_map(kbd, key)
 endfunction
 
 function! s:ipairs_def_all()
+  if exists('b:pairs_map_list')
+    return
+  end
+
+  call s:ipairs_dev_var()
+
   if g:pairs_map_ret
     call s:ipairs_def_map("<CR>", "<CR>")
   endif
@@ -215,6 +217,6 @@ endfunction
 
 augroup pairs_update_buffer
   autocmd!
-  au BufEnter * call <SID>ipairs_def_var() | call <SID>ipairs_def_all()
-  au FileType * call <SID>ipairs_clr_map() | call <SID>ipairs_def_var() | call <SID>ipairs_def_all()
+  au BufEnter * call call <SID>ipairs_def_all()
+  au FileType * call <SID>ipairs_clr_map() | call <SID>ipairs_def_all()
 augroup end
