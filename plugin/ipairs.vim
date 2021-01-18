@@ -217,6 +217,6 @@ endfunction
 
 augroup pairs_update_buffer
   autocmd!
-  au BufEnter * call call <SID>ipairs_def_all()
+  au BufEnter * call <SID>ipairs_def_all()
   au FileType * call <SID>ipairs_clr_map() | call <SID>ipairs_def_all()
 augroup end
