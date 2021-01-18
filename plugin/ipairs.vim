@@ -188,7 +188,7 @@ function! s:ipairs_def_all()
     return
   end
 
-  call s:ipairs_dev_var()
+  call s:ipairs_def_var()
 
   if g:pairs_map_ret
     call s:ipairs_def_map("<CR>", "<CR>")
