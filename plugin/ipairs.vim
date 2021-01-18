@@ -45,9 +45,9 @@ function! s:ipairs_context.get(arg) abort
 endfunction
 
 "" Refresh buffer variables.
-"" b:pairs_buffer  :   dict, [pair_a, pair_b].
-"" b:pairs_buffer_map: dict, [key, func]
-"" b:pairs_map_list:   list, single character key.
+"" b:pairs_buffer     -> dict, { pair_a: pair_b }
+"" b:pairs_buffer_map -> dict, { key: func }
+"" b:pairs_map_list   -> list, [single_char_key]
 function! s:ipairs_clr_map()
   if exists('b:pairs_map_list')
     for key in b:pairs_map_list
@@ -213,7 +213,7 @@ function! s:ipairs_def_all()
 endfunction
 
 
-augroup pairs_switch_buffer
+augroup pairs_update_buffer
   autocmd!
   au BufEnter * call <SID>ipairs_def_var() | call <SID>ipairs_def_all()
   au FileType * call <SID>ipairs_clr_map() | call <SID>ipairs_def_var() | call <SID>ipairs_def_all()
