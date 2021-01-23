@@ -175,7 +175,6 @@ function! s:ipairs_quote(quote)
 endfunction
 
 "" Key maps
-""" <CR> could be remapped by other plugin.
 function! s:ipairs_def_map(kbd, key)
   let l:key = a:key =~# '\v\<[A-Z].*\>' ?
         \ "" : '"' . escape(a:key, '"') . '"'
@@ -191,8 +190,7 @@ function! s:ipairs_def_all()
   call s:ipairs_def_var()
 
   if g:pairs_map_ret
-    "call s:ipairs_def_map("<CR>", "<CR>")
-    ino <Plug>(ipairs_enter) <SID>ipairs_enter()<CR>
+    ino <expr> <Plug>(ipairs_enter) <SID>ipairs_enter()
   endif
 
   if g:pairs_map_bak
