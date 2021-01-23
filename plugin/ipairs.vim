@@ -190,6 +190,8 @@ function! s:ipairs_def_all()
   call s:ipairs_def_var()
 
   if g:pairs_map_ret
+    call s:ipairs_def_map("<CR>", "<CR>")
+  else
     ino <expr> <Plug>(ipairs_enter) <SID>ipairs_enter()
   endif
 
