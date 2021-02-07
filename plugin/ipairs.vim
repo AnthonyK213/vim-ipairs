@@ -191,6 +191,8 @@ function! s:ipairs_def_all()
 
   if g:pairs_map_ret
     call s:ipairs_def_map("<CR>", "<CR>")
+  else
+    ino <expr> <Plug>(ipairs_enter) <SID>ipairs_enter()
   endif
 
   if g:pairs_map_bak
@@ -212,9 +214,6 @@ function! s:ipairs_def_all()
     endfor
   endif
 endfunction
-
-
-ino <expr> <Plug>(ipairs_enter) <SID>ipairs_enter()
 
 
 augroup pairs_update_buffer
