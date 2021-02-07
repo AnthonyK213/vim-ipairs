@@ -90,12 +90,12 @@ function! s:ipairs_def_var()
   for [key, val] in items(b:pairs_buffer) 
     if key ==# val
       if len(val) == 1
-        call extend(b:pairs_buffer_map, {key:"quote"})
+        call extend(b:pairs_buffer_map, {key : "quote"})
       else
-        call extend(b:pairs_buffer_map, {key:"mates"})
+        call extend(b:pairs_buffer_map, {key : "mates"})
       endif
     else
-      call extend(b:pairs_buffer_map, {key:"mates", val:"close"})
+      call extend(b:pairs_buffer_map, {key : "mates", val : "close"})
     endif
   endfor
 endfunction
