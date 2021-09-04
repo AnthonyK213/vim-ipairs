@@ -1,5 +1,5 @@
 # NOTE
-vim-ipairs has been rewritten in lua, please check out [AthonyK213/nvim](https://github.com/AnthonyK213/nvim.git)
+**Deprecated**, please check out [AthonyK213/lua-pairs](https://github.com/AnthonyK213/lua-pairs.git)
 
 # vim-ipairs
 Simple pairing implementation in neovim.
