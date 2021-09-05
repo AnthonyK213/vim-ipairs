@@ -35,7 +35,7 @@ endfunction
 
 "" Get the character around the cursor.
 let s:ipairs_context = {
-      \ 'l' : ['.\%',   'c'],
+      \ 'p' : ['.\%',   'c'],
       \ 'n' : ['\%',   'c.'],
       \ 'b' : ['^.*\%', 'c'],
       \ 'f' : ['\%', 'c.*$']
@@ -102,7 +102,7 @@ endfunction
 
 "" Pairs
 function! s:ipairs_is_surrounded(pair_dict)
-  let l:last_char = s:ipairs_context.get('l')
+  let l:last_char = s:ipairs_context.get('p')
   return has_key(a:pair_dict, l:last_char) &&
         \ b:pairs_buffer[l:last_char] == s:ipairs_context.get('n')
 endfunction
@@ -168,7 +168,7 @@ function! s:ipairs_close(pair_b)
 endfunction
 
 function! s:ipairs_quote(quote)
-  let l:last_char = s:ipairs_context.get('l')
+  let l:last_char = s:ipairs_context.get('p')
   let l:next_char = s:ipairs_context.get('n')
   if l:next_char ==# a:quote &&
         \ (l:last_char ==# a:quote ||
