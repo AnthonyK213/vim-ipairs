@@ -170,9 +170,7 @@ endfunction
 function! s:ipairs_quote(quote)
   let l:last_char = s:ipairs_context.get('p')
   let l:next_char = s:ipairs_context.get('n')
-  if l:next_char ==# a:quote &&
-        \ (l:last_char ==# a:quote ||
-        \  l:last_char =~ s:ipairs_reg(g:pairs_is_word))
+  if l:next_char ==# a:quote
     return "\<C-G>U\<Right>"
   elseif  l:last_char ==# a:quote ||
         \ l:last_char =~ s:ipairs_reg(g:pairs_is_word . b:last_spec) ||
