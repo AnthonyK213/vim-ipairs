@@ -116,7 +116,7 @@ function! s:ipairs_enter()
   if s:ipairs_is_surrounded(b:pairs_buffer)
     return "\<CR>\<C-O>O"
   elseif l:context['b'] =~ '\v\{\s*$' && l:context['f'] =~ '\v^\s*\}'
-    return "\<C-\>\<C-O>_diB\<CR>\<C-\>\<C-O>O"
+    return "\<C-\>\<C-O>\"_diB\<CR>\<C-\>\<C-O>O"
   else
     return "\<CR>"
   endif
@@ -125,7 +125,7 @@ endfunction
 function! s:ipairs_backs()
   let l:context = s:ipairs_get_context()
   if l:context['b'] =~ '\v\{\s$' && l:context['f'] =~ '\v^\s\}'
-    return "\<C-G>U\<Left>\<C-\>\<C-O>2x"
+    return "\<C-\>\<C-O>\"_diB"
   endif
   return s:ipairs_is_surrounded(b:pairs_buffer) ?
         \ "\<C-G>U\<Right>\<BS>\<BS>" : "\<BS>"
@@ -148,9 +148,9 @@ function! s:ipairs_supbs()
     return repeat("\<C-G>U\<Left>", l:res[1]) .
           \ repeat("\<Del>", l:res[1] + l:res[2])
   elseif l:back =~ '\v\{\s*$' && l:fore =~ '\v^\s*\}'
-    return "\<C-\>\<C-O>_diB"
+    return "\<C-\>\<C-O>\"_diB"
   else
-    return "\<C-\>\<C-O>_db"
+    return "\<C-\>\<C-O>\"_db"
   endif
 endfunction
 
