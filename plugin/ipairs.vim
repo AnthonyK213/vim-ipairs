@@ -34,14 +34,17 @@ function! s:ipairs_reg(str)
 endfunction
 
 "" Get the character around the cursor.
-let s:ipairs_context = {
-      \ 'p' : ['.\%',   'c'],
-      \ 'n' : ['\%',   'c.'],
-      \ 'b' : ['^.*\%', 'c'],
-      \ 'f' : ['\%', 'c.*$']
-      \ }
-function! s:ipairs_context.get(arg) abort
-  return matchstr(getline('.'), self[a:arg][0] . col('.') . self[a:arg][1])
+function! s:ipairs_get_context() abort
+  let col = col('.')
+  let line = getline('.')
+  let back = strpart(line, 0, col - 1)
+  let fore = strpart(line, col - 1)
+  return {
+        \ "b" : back,
+        \ "f" : fore,
+        \ "p" : empty(back) ? "" : nr2char(strgetchar(back, strchars(back) - 1)),
+        \ "n" : empty(fore) ? "" : nr2char(strgetchar(fore, 0))
+        \ }
 endfunction
 
 "" Refresh buffer variables.
@@ -102,16 +105,17 @@ endfunction
 
 "" Pairs
 function! s:ipairs_is_surrounded(pair_dict)
-  let l:last_char = s:ipairs_context.get('p')
+  let l:context = s:ipairs_get_context()
+  let l:last_char = l:context['p']
   return has_key(a:pair_dict, l:last_char) &&
-        \ b:pairs_buffer[l:last_char] == s:ipairs_context.get('n')
+        \ b:pairs_buffer[l:last_char] == l:context['n']
 endfunction
 
 function! s:ipairs_enter()
+  let l:context = s:ipairs_get_context()
   if s:ipairs_is_surrounded(b:pairs_buffer)
     return "\<CR>\<C-O>O"
-  elseif s:ipairs_context.get('b') =~ '\v\{\s*$' &&
-        \ s:ipairs_context.get('f') =~ '\v^\s*\}'
+  elseif l:context['b'] =~ '\v\{\s*$' && l:context['f'] =~ '\v^\s*\}'
     return "\<C-\>\<C-O>diB\<CR>\<C-\>\<C-O>O"
   else
     return "\<CR>"
@@ -119,9 +123,8 @@ function! s:ipairs_enter()
 endfunction
 
 function! s:ipairs_backs()
-  let l:back = s:ipairs_context.get('b')
-  let l:fore = s:ipairs_context.get('f')
-  if l:back =~ '\v\{\s$' && l:fore =~ '\v^\s\}'
+  let l:context = s:ipairs_get_context()
+  if l:context['b'] =~ '\v\{\s$' && l:context['f'] =~ '\v^\s\}'
     return "\<C-G>U\<Left>\<C-\>\<C-O>2x"
   endif
   return s:ipairs_is_surrounded(b:pairs_buffer) ?
@@ -129,8 +132,9 @@ function! s:ipairs_backs()
 endfunction
 
 function! s:ipairs_supbs()
-  let l:back = s:ipairs_context.get('b')
-  let l:fore = s:ipairs_context.get('f')
+  let l:context = s:ipairs_get_context()
+  let l:back = l:context['b']
+  let l:fore = l:context['f']
   let l:res = [0, 0, 0]
   for [l:key, l:val] in items(b:pairs_buffer)
     let l:key_esc = '\v' . escape(l:key, g:pairs_esc_reg) . '$'
@@ -156,26 +160,27 @@ function! s:ipairs_space()
 endfunction
 
 function! s:ipairs_mates(pair_a)
-  return s:ipairs_context.get('n') =~ s:ipairs_reg(g:pairs_is_word) ?
+  return s:ipairs_get_context()['n'] =~ s:ipairs_reg(g:pairs_is_word) ?
         \ a:pair_a :
         \ a:pair_a . b:pairs_buffer[a:pair_a] .
         \ repeat("\<C-G>U\<Left>", len(b:pairs_buffer[a:pair_a]))
 endfunction
 
 function! s:ipairs_close(pair_b)
-  return s:ipairs_context.get('n') ==# a:pair_b ?
+  return s:ipairs_get_context()['n'] ==# a:pair_b ?
         \ "\<C-G>U\<Right>" : a:pair_b
 endfunction
 
 function! s:ipairs_quote(quote)
-  let l:last_char = s:ipairs_context.get('p')
-  let l:next_char = s:ipairs_context.get('n')
+  let l:context = s:ipairs_get_context()
+  let l:last_char = l:context['p']
+  let l:next_char = l:context['n']
   if l:next_char ==# a:quote
     return "\<C-G>U\<Right>"
   elseif  l:last_char ==# a:quote ||
         \ l:last_char =~ s:ipairs_reg(g:pairs_is_word . b:last_spec) ||
         \ l:next_char =~ s:ipairs_reg(g:pairs_is_word . b:next_spec) ||
-        \ s:ipairs_context.get('b') =~ b:back_spec
+        \ l:context['b'] =~ b:back_spec
     return a:quote
   else
     return a:quote . a:quote . "\<C-G>U\<Left>"
